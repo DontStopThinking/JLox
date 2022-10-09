@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JLox
 {
@@ -60,6 +61,28 @@ namespace JLox
                 case '>':
                     AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
                     break;
+                case '/':
+                    if (Match('/'))
+                    {
+                        // A comment goes until the end of the line
+                        while (Peek() != '\n' && !IsAtEnd())
+                        {
+                            Advance();
+                        }
+                    }
+                    else
+                    {
+                        AddToken(TokenType.SLASH);
+                    }
+                    break;
+                case ' ':
+                case '\r':
+                case '\t':
+                    // Ignore whitespace
+                    break;
+                case '\n':
+                    _line++;
+                    break;
                 default:
                     Lox.Error(_line, $"Unexpected character '{c}'");
                     break;
@@ -93,6 +116,15 @@ namespace JLox
 
             _current++;
             return true;
+        }
+
+        private char Peek()
+        {
+            if (IsAtEnd())
+            {
+                return '\0';
+            }
+            return _source[_current];
         }
     }
 }
