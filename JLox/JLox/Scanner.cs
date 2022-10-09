@@ -83,8 +83,19 @@ namespace JLox
                 case '\n':
                     _line++;
                     break;
+                case '"':
+                    HandleString();
+                    break;
+
                 default:
-                    Lox.Error(_line, $"Unexpected character '{c}'");
+                    if (char.IsDigit(c))
+                    {
+                        HandleNumber();
+                    }
+                    else
+                    {
+                        Lox.Error(_line, $"Unexpected character '{c}'");
+                    }
                     break;
             }
         }
@@ -125,6 +136,62 @@ namespace JLox
                 return '\0';
             }
             return _source[_current];
+        }
+
+        private void HandleString()
+        {
+            while (Peek() != '"' && !IsAtEnd())
+            {
+                if (Peek() == '\n')
+                {
+                    _line++;
+                }
+                Advance();
+            }
+
+            if (IsAtEnd())
+            {
+                Lox.Error(_line, "Unterminated string.");
+                return;
+            }
+
+            // The closing ".
+            Advance();
+
+            // Trim the surrounding quotes.
+            string value = _source[(_start + 1)..(_current - 1)];
+            AddToken(TokenType.STRING, value);
+        }
+
+        private void HandleNumber()
+        {
+            while (char.IsDigit(Peek()))
+            {
+                Advance();
+            }
+
+            // Look for a fractional part.
+            if (Peek() == '.' && char.IsDigit(PeekNext()))
+            {
+                // Consume the "."
+                Advance();
+
+                while (char.IsDigit(Peek()))
+                {
+                    Advance();
+                }
+            }
+
+            AddToken(TokenType.NUMBER, double.Parse(_source[_start.._current]));
+        }
+
+        private char PeekNext()
+        {
+            if (_current + 1 >= _source.Length)
+            {
+                return '\0';
+            }
+            return _source[_current + 1];
         }
     }
 }
