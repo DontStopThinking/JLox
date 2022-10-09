@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace JLox
 {
@@ -10,6 +9,26 @@ namespace JLox
         private int _start = 0; // points to the first character in the lexeme being scanned.
         private int _current = 0;   // points to the character currently being considered.
         private int _line = 1;  // the line number that we are currently on.
+
+        private static readonly Dictionary<string, TokenType> _keywords = new()
+        {
+            { "and",        TokenType.AND },
+            { "class",      TokenType.CLASS },
+            { "else",       TokenType.ELSE },
+            { "false",      TokenType.FALSE },
+            { "for",        TokenType.FOR },
+            { "fun",        TokenType.FUN },
+            { "if",         TokenType.IF },
+            { "nil",        TokenType.NIL },
+            { "or",         TokenType.OR },
+            { "print",      TokenType.PRINT },
+            { "return",     TokenType.RETURN },
+            { "super",      TokenType.SUPER },
+            { "this",       TokenType.THIS },
+            { "true",       TokenType.TRUE },
+            { "var",        TokenType.VAR },
+            { "while",      TokenType.WHILE }
+        };
 
         public Scanner(string source)
         {
@@ -204,7 +223,14 @@ namespace JLox
             {
                 Advance();
             }
-            AddToken(TokenType.IDENTIFIER);
+
+            string text = _source[_start.._current];
+            if (!_keywords.TryGetValue(text, out TokenType type))
+            {
+                type = TokenType.IDENTIFIER;
+            }
+
+            AddToken(type);
         }
     }
 }
