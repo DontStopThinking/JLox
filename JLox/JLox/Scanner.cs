@@ -48,6 +48,9 @@ namespace JLox
                 case '+': AddToken(TokenType.PLUS); break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
                 case '*': AddToken(TokenType.STAR); break;
+                default:
+                    Lox.Error(_line, $"Unexpected character '{c}'");
+                    break;
             }
         }
 
