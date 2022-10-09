@@ -92,6 +92,10 @@ namespace JLox
                     {
                         HandleNumber();
                     }
+                    else if (char.IsLetter(c))
+                    {
+                        HandleIdentifier();
+                    }
                     else
                     {
                         Lox.Error(_line, $"Unexpected character '{c}'");
@@ -136,6 +140,15 @@ namespace JLox
                 return '\0';
             }
             return _source[_current];
+        }
+
+        private char PeekNext()
+        {
+            if (_current + 1 >= _source.Length)
+            {
+                return '\0';
+            }
+            return _source[_current + 1];
         }
 
         private void HandleString()
@@ -185,13 +198,13 @@ namespace JLox
             AddToken(TokenType.NUMBER, double.Parse(_source[_start.._current]));
         }
 
-        private char PeekNext()
+        private void HandleIdentifier()
         {
-            if (_current + 1 >= _source.Length)
+            while (char.IsLetterOrDigit(Peek()))
             {
-                return '\0';
+                Advance();
             }
-            return _source[_current + 1];
+            AddToken(TokenType.IDENTIFIER);
         }
     }
 }
