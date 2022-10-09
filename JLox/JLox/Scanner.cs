@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JLox
 {
@@ -67,7 +68,8 @@ namespace JLox
                 case '-': AddToken(TokenType.MINUS); break;
                 case '+': AddToken(TokenType.PLUS); break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
-                case '*': AddToken(TokenType.STAR); break;
+                case '*':
+                    AddToken(TokenType.STAR); break;
                 case '!':
                     AddToken(Match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
                     break;
@@ -88,6 +90,10 @@ namespace JLox
                         {
                             Advance();
                         }
+                    }
+                    else if (Match('*'))
+                    {
+                        HandleBlockComment();
                     }
                     else
                     {
@@ -193,6 +199,23 @@ namespace JLox
             // Trim the surrounding quotes.
             string value = _source[(_start + 1)..(_current - 1)];
             AddToken(TokenType.STRING, value);
+        }
+
+        private void HandleBlockComment()
+        {
+            while (Peek() != '*' && PeekNext() != '/' && !IsAtEnd())
+            {
+                Advance();
+            }
+
+            if (IsAtEnd())
+            {
+                return;
+            }
+
+            // The closing '*/'
+            Advance();
+            Advance();
         }
 
         private void HandleNumber()
