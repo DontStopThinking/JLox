@@ -6,11 +6,11 @@ internal class Scanner
 {
     private readonly string _source;
     private readonly List<Token> _tokens = new();
-    private int start; // points to the first character in the lexeme being scanned.
-    private int current;   // points to the character currently being considered.
-    private int line = 1;  // the line number that we are currently on.
+    private int _start; // points to the first character in the lexeme being scanned.
+    private int _current;   // points to the character currently being considered.
+    private int _line = 1;  // the line number that we are currently on.
 
-    private static readonly Dictionary<string, TokenType> Keywords = new()
+    private static readonly Dictionary<string, TokenType> s_keywords = new()
     {
         { "and",        TokenType.And },
         { "class",      TokenType.Class },
@@ -33,7 +33,7 @@ internal class Scanner
     public Scanner(string source)
     {
         _source = source;
-        current = 0;
+        _current = 0;
     }
 
     public List<Token> ScanTokens()
@@ -41,17 +41,17 @@ internal class Scanner
         while (!IsAtEnd())
         {
             // We are at the beginning of the next lexeme.
-            start = current;
+            _start = _current;
             ScanToken();
         }
 
-        _tokens.Add(new Token(TokenType.Eof, string.Empty, null, line));
+        _tokens.Add(new Token(TokenType.Eof, string.Empty, null, _line));
         return _tokens;
     }
 
     private bool IsAtEnd()
     {
-        return current >= _source.Length;
+        return _current >= _source.Length;
     }
 
     private void ScanToken()
@@ -68,9 +68,9 @@ internal class Scanner
             case '-': AddToken(TokenType.Minus); break;
             case '+': AddToken(TokenType.Plus); break;
             case ';': AddToken(TokenType.Semicolon); break;
-            case '*':
-                AddToken(TokenType.Star); break;
+            case '*': AddToken(TokenType.Star); break;
             case '!':
+                // If next character is '=' then add '!=' otherwise just add '!'
                 AddToken(Match('=') ? TokenType.BangEqual : TokenType.Bang);
                 break;
             case '=':
@@ -85,7 +85,7 @@ internal class Scanner
             case '/':
                 if (Match('/'))
                 {
-                    // A comment goes until the end of the line
+                    // Since this is a line comment, keep advancing until the end of line
                     while (Peek() != '\n' && !IsAtEnd())
                     {
                         Advance();
@@ -106,7 +106,7 @@ internal class Scanner
                 // Ignore whitespace
                 break;
             case '\n':
-                line++;
+                _line++;
                 break;
             case '"':
                 HandleString();
@@ -123,18 +123,18 @@ internal class Scanner
                 }
                 else
                 {
-                    Lox.Error(line, $"Unexpected character '{c}'");
+                    Lox.Error(_line, $"Unexpected character '{c}'");
                 }
                 break;
         }
     }
 
-    private char Advance() => _source[current++];
+    private char Advance() => _source[_current++];
 
     private void AddToken(TokenType type, object? literal = null)
     {
-        string text = _source[start..current];
-        _tokens.Add(new Token(type, text, literal, line));
+        string text = _source[_start.._current];
+        _tokens.Add(new Token(type, text, literal, _line));
     }
 
     private bool Match(char expected)
@@ -144,23 +144,23 @@ internal class Scanner
             return false;
         }
 
-        if (_source[current] != expected)
+        if (_source[_current] != expected)
         {
             return false;
         }
 
-        current++;
+        _current++;
         return true;
     }
 
     private char Peek()
     {
-        return IsAtEnd() ? '\0' : _source[current];
+        return IsAtEnd() ? '\0' : _source[_current];
     }
 
     private char PeekNext()
     {
-        return current + 1 >= _source.Length ? '\0' : _source[current + 1];
+        return _current + 1 >= _source.Length ? '\0' : _source[_current + 1];
     }
 
     private void HandleString()
@@ -169,14 +169,14 @@ internal class Scanner
         {
             if (Peek() == '\n')
             {
-                line++;
+                _line++;
             }
             Advance();
         }
 
         if (IsAtEnd())
         {
-            Lox.Error(line, "Unterminated string.");
+            Lox.Error(_line, "Unterminated string.");
             return;
         }
 
@@ -184,7 +184,7 @@ internal class Scanner
         Advance();
 
         // Trim the surrounding quotes.
-        string value = _source[(start + 1)..(current - 1)];
+        string value = _source[(_start + 1)..(_current - 1)];
         AddToken(TokenType.String, value);
     }
 
@@ -224,7 +224,7 @@ internal class Scanner
             }
         }
 
-        AddToken(TokenType.Number, double.Parse(_source[start..current]));
+        AddToken(TokenType.Number, double.Parse(_source[_start.._current]));
     }
 
     private void HandleIdentifier()
@@ -234,8 +234,9 @@ internal class Scanner
             Advance();
         }
 
-        string text = _source[start..current];
-        if (!Keywords.TryGetValue(text, out TokenType type))
+        string text = _source[_start.._current];
+
+        if (!s_keywords.TryGetValue(text, out TokenType type))
         {
             type = TokenType.Identifier;
         }

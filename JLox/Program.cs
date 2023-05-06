@@ -7,7 +7,7 @@ namespace JLox;
 
 public static class Lox
 {
-    private static bool hadError;
+    private static bool s_hadError;
 
     public static void Main(string[] args)
     {
@@ -29,7 +29,7 @@ public static class Lox
     private static void RunFile(string path)
     {
         Run(File.ReadAllText(path));
-        if (hadError)
+        if (s_hadError)
         {
             Environment.Exit(65);
         }
@@ -40,13 +40,16 @@ public static class Lox
         while (true)
         {
             Console.Write("> ");
+
             string? line = Console.ReadLine();
             if (line == null)
             {
                 break;
             }
+
             Run(line);
-            hadError = false;
+
+            s_hadError = false;
         }
     }
 
@@ -64,12 +67,12 @@ public static class Lox
 
     public static void Error(int line, string message)
     {
+        s_hadError = true;
         Report(line, string.Empty, message);
     }
 
     private static void Report(int line, string where, string message)
     {
         Console.Error.WriteLine($"[line {line}] Error{where}: {message}");
-        hadError = true;
     }
 }
