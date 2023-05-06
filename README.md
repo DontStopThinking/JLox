@@ -1,4 +1,4 @@
-#JLox
+# JLox
 
 My source code for Robert Nystrom's [Crafting Interpreters](https://craftinginterpreters.com/).
 So far this contains the first part which builds an interpreter.
