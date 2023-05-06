@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JLox
+namespace JLox.Scanning
 {
     internal class Scanner
     {

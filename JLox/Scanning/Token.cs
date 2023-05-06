@@ -1,4 +1,4 @@
-﻿namespace JLox
+﻿namespace JLox.Scanning
 {
     internal class Token
     {
