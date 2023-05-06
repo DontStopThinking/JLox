@@ -1,4 +1,5 @@
 ﻿namespace JLox.Scanning;
+
 internal class Token
 {
     private readonly TokenType _type;

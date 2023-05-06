@@ -6,9 +6,9 @@ internal class Scanner
 {
     private readonly string _source;
     private readonly List<Token> _tokens = new();
-    private int _start; // points to the first character in the lexeme being scanned.
-    private int _current;   // points to the character currently being considered.
-    private int _line = 1;  // the line number that we are currently on.
+    private int start; // points to the first character in the lexeme being scanned.
+    private int current;   // points to the character currently being considered.
+    private int line = 1;  // the line number that we are currently on.
 
     private static readonly Dictionary<string, TokenType> Keywords = new()
     {
@@ -33,7 +33,7 @@ internal class Scanner
     public Scanner(string source)
     {
         _source = source;
-        _current = 0;
+        current = 0;
     }
 
     public List<Token> ScanTokens()
@@ -41,17 +41,17 @@ internal class Scanner
         while (!IsAtEnd())
         {
             // We are at the beginning of the next lexeme.
-            _start = _current;
+            start = current;
             ScanToken();
         }
 
-        _tokens.Add(new Token(TokenType.Eof, string.Empty, null, _line));
+        _tokens.Add(new Token(TokenType.Eof, string.Empty, null, line));
         return _tokens;
     }
 
     private bool IsAtEnd()
     {
-        return _current >= _source.Length;
+        return current >= _source.Length;
     }
 
     private void ScanToken()
@@ -106,7 +106,7 @@ internal class Scanner
                 // Ignore whitespace
                 break;
             case '\n':
-                _line++;
+                line++;
                 break;
             case '"':
                 HandleString();
@@ -123,18 +123,18 @@ internal class Scanner
                 }
                 else
                 {
-                    Lox.Error(_line, $"Unexpected character '{c}'");
+                    Lox.Error(line, $"Unexpected character '{c}'");
                 }
                 break;
         }
     }
 
-    private char Advance() => _source[_current++];
+    private char Advance() => _source[current++];
 
     private void AddToken(TokenType type, object? literal = null)
     {
-        string text = _source[_start.._current];
-        _tokens.Add(new Token(type, text, literal, _line));
+        string text = _source[start..current];
+        _tokens.Add(new Token(type, text, literal, line));
     }
 
     private bool Match(char expected)
@@ -144,23 +144,23 @@ internal class Scanner
             return false;
         }
 
-        if (_source[_current] != expected)
+        if (_source[current] != expected)
         {
             return false;
         }
 
-        _current++;
+        current++;
         return true;
     }
 
     private char Peek()
     {
-        return IsAtEnd() ? '\0' : _source[_current];
+        return IsAtEnd() ? '\0' : _source[current];
     }
 
     private char PeekNext()
     {
-        return _current + 1 >= _source.Length ? '\0' : _source[_current + 1];
+        return current + 1 >= _source.Length ? '\0' : _source[current + 1];
     }
 
     private void HandleString()
@@ -169,22 +169,22 @@ internal class Scanner
         {
             if (Peek() == '\n')
             {
-                _line++;
+                line++;
             }
             Advance();
         }
 
         if (IsAtEnd())
         {
-            Lox.Error(_line, "Unterminated string.");
+            Lox.Error(line, "Unterminated string.");
             return;
         }
 
-        // The closing ".
+        // The closing '"'
         Advance();
 
         // Trim the surrounding quotes.
-        string value = _source[(_start + 1)..(_current - 1)];
+        string value = _source[(start + 1)..(current - 1)];
         AddToken(TokenType.String, value);
     }
 
@@ -224,7 +224,7 @@ internal class Scanner
             }
         }
 
-        AddToken(TokenType.Number, double.Parse(_source[_start.._current]));
+        AddToken(TokenType.Number, double.Parse(_source[start..current]));
     }
 
     private void HandleIdentifier()
@@ -234,7 +234,7 @@ internal class Scanner
             Advance();
         }
 
-        string text = _source[_start.._current];
+        string text = _source[start..current];
         if (!Keywords.TryGetValue(text, out TokenType type))
         {
             type = TokenType.Identifier;
