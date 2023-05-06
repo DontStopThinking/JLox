@@ -100,18 +100,13 @@ internal class Scanner
                     AddToken(TokenType.Slash);
                 }
                 break;
-            case ' ':
-            case '\r':
-            case '\t':
-                // Ignore whitespace
-                break;
             case '\n':
                 _line++;
                 break;
             case '"':
                 HandleString();
                 break;
-
+            case ' ': case '\r': case '\t': break;    // Ignore whitespace (i.e. ' ', '\r', '\t')
             default:
                 if (char.IsDigit(c))
                 {
@@ -153,6 +148,9 @@ internal class Scanner
         return true;
     }
 
+    /// <summary>
+    /// Does a lookahead. Like <see cref="Advance"/>, but doesn't consume the character.
+    /// </summary>
     private char Peek()
     {
         return IsAtEnd() ? '\0' : _source[_current];
@@ -212,7 +210,7 @@ internal class Scanner
             Advance();
         }
 
-        // Look for a fractional part.
+        // Look for a fractional part
         if (Peek() == '.' && char.IsDigit(PeekNext()))
         {
             // Consume the "."
