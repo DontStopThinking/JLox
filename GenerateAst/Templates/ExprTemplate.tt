@@ -1,0 +1,55 @@
+﻿<#@ template language="C#" #>
+<#
+    if (ContainerClassName is null)
+    {
+        throw new InvalidOperationException($"{nameof(ContainerClassName)} is not initialized.");
+    }
+
+    if (RuleModels is null)
+    {
+        throw new InvalidOperationException($"{nameof(RuleModels)} is not initialized");
+    }
+#>
+using JLox.Scanning;
+
+namespace JLox.SyntaxTrees;
+
+internal abstract class <#= ContainerClassName #>
+{
+<#
+    foreach (RuleModel ruleModel in RuleModels)
+    {
+#>
+    internal class <#= ruleModel.ClassName #>
+    {
+<#
+        foreach ((string memberType, string memberName) in ruleModel.MemberTypeToNames)
+        {
+#>
+        private readonly <#= memberType #> _<#= memberName #>;
+<#
+        }
+#>
+
+        public <#= ruleModel.ClassName #>(<#= ruleModel.ConstructorArguments #>)
+        {
+<#
+        foreach (string memberName in ruleModel.MemberNames)
+        {
+#>
+            _<#= memberName #> = <#= memberName #>;
+<#
+        }
+#>
+        }
+    }
+<#
+    }
+#>
+}
+<#+
+#nullable enable
+    public string? ContainerClassName { get; init; }
+    public IReadOnlyList<RuleModel>? RuleModels { get; init; }
+#nullable disable
+#>

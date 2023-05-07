@@ -5,6 +5,10 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JLox", "JLox\JLox.csproj", "{BFD35856-95A1-401A-8918-F02734F3141E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{EC2D37CC-863B-4DCE-B49D-F948DF62E8BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateAst", "GenerateAst\GenerateAst.csproj", "{FAEA06EF-AAEB-417A-9AB8-3F964DF88213}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,11 +19,18 @@ Global
 		{BFD35856-95A1-401A-8918-F02734F3141E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFD35856-95A1-401A-8918-F02734F3141E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFD35856-95A1-401A-8918-F02734F3141E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAEA06EF-AAEB-417A-9AB8-3F964DF88213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEA06EF-AAEB-417A-9AB8-3F964DF88213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEA06EF-AAEB-417A-9AB8-3F964DF88213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEA06EF-AAEB-417A-9AB8-3F964DF88213}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E1ECC74-F6AA-47B1-BC11-7A8598194167}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FAEA06EF-AAEB-417A-9AB8-3F964DF88213} = {EC2D37CC-863B-4DCE-B49D-F948DF62E8BC}
 	EndGlobalSection
 EndGlobal
