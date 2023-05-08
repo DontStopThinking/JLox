@@ -1,5 +1,6 @@
 ﻿using GenerateAst;
 using GenerateAst.Templates;
+using GenerateAst.Utils;
 
 if (args.Length != 1)
 {
@@ -23,10 +24,11 @@ List<RuleModel> ruleModels = GenerateRuleModels(rules);
 
 string outputFilePath = Path.Combine(outputDir, "Expr.generated.cs");
 
-Console.WriteLine("---------- Generating file ----------");
+GenerationLog("Generating file");
 try
 {
-    Console.WriteLine(outputFilePath);
+    Console.WriteLine($"File: {outputFilePath}");
+
     ExprTemplate exprTemplate = new() { ContainerClassName = "Expr", RuleModels = ruleModels };
     string outputContent = exprTemplate.TransformText();
 
@@ -34,12 +36,12 @@ try
 }
 catch (Exception ex)
 {
-    Console.Error.WriteLine("---------- Error generating file ----------");
+    GenerationLog("Error generating file", true);
     Console.Error.WriteLine(ex.Message);
 }
 finally
 {
-    Console.WriteLine("---------- Generation finished ----------");
+    GenerationLog("Generation finished");
 }
 
 static List<RuleModel> GenerateRuleModels(IReadOnlyCollection<string> rules)
@@ -66,4 +68,19 @@ static List<RuleModel> GenerateRuleModels(IReadOnlyCollection<string> rules)
     }
 
     return result;
+}
+
+static void GenerationLog(string message, bool error = false)
+{
+    const int length = 80;
+    string formattedMessage = $" {message.PadBoth(length, '-')} ";
+
+    if (error)
+    {
+        Console.Error.WriteLine(formattedMessage);
+    }
+    else
+    {
+        Console.WriteLine(formattedMessage);
+    }
 }
