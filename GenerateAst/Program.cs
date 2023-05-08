@@ -23,7 +23,7 @@ List<RuleModel> ruleModels = GenerateRuleModels(rules);
 
 string outputFilePath = Path.Combine(outputDir, "Expr.generated.cs");
 
-Console.WriteLine($"---------- Generating file ----------");
+Console.WriteLine("---------- Generating file ----------");
 try
 {
     Console.WriteLine(outputFilePath);
@@ -34,12 +34,12 @@ try
 }
 catch (Exception ex)
 {
-    Console.Error.WriteLine($"---------- Error generating file ----------");
+    Console.Error.WriteLine("---------- Error generating file ----------");
     Console.Error.WriteLine(ex.Message);
 }
 finally
 {
-    Console.WriteLine("---------- Generating finished ----------");
+    Console.WriteLine("---------- Generation finished ----------");
 }
 
 static List<RuleModel> GenerateRuleModels(IReadOnlyCollection<string> rules)

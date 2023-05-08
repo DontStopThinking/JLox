@@ -7,7 +7,7 @@
 
     if (RuleModels is null)
     {
-        throw new InvalidOperationException($"{nameof(RuleModels)} is not initialized");
+        throw new InvalidOperationException($"{nameof(RuleModels)} is not initialized.");
     }
 #>
 using JLox.Scanning;
@@ -16,11 +16,27 @@ namespace JLox.SyntaxTrees;
 
 internal abstract class <#= ContainerClassName #>
 {
+    internal interface Visitor<R>
+    {
 <#
     foreach (RuleModel ruleModel in RuleModels)
     {
 #>
-    internal class <#= ruleModel.ClassName #>
+        R Visit<#= ruleModel.ClassName #><#= ContainerClassName #>(<#= ruleModel.ClassName #> <#= ContainerClassName.ToLower() #>);
+<#
+    }
+#>
+    }
+
+    internal abstract R Accept<R>(Visitor<R> visitor);
+
+    // The AST classes
+<#
+    for (int i = 0; i < RuleModels.Count; i++)
+    {
+        RuleModel ruleModel = RuleModels[i];
+#>
+    internal class <#= ruleModel.ClassName #> : <#= ContainerClassName #>
     {
 <#
         foreach ((string memberType, string memberName) in ruleModel.MemberTypeToNames)
@@ -42,8 +58,17 @@ internal abstract class <#= ContainerClassName #>
         }
 #>
         }
+
+        internal override R Accept<R>(Visitor<R> visitor)
+        {
+            return visitor.Visit<#= ruleModel.ClassName #><#= ContainerClassName #>(this);
+        }
     }
 <#
+        if (i != RuleModels.Count - 1)
+        {
+            Write(Environment.NewLine);
+        }
     }
 #>
 }

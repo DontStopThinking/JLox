@@ -35,7 +35,7 @@ namespace GenerateAst.Templates
 
     if (RuleModels is null)
     {
-        throw new InvalidOperationException($"{nameof(RuleModels)} is not initialized");
+        throw new InvalidOperationException($"{nameof(RuleModels)} is not initialized.");
     }
 
             
@@ -48,9 +48,9 @@ namespace GenerateAst.Templates
             
             #line default
             #line hidden
-            this.Write("\r\n{\r\n");
+            this.Write("\r\n{\r\n    internal interface Visitor<R>\r\n    {\r\n");
             
-            #line 19 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 21 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
 
     foreach (RuleModel ruleModel in RuleModels)
     {
@@ -58,16 +58,70 @@ namespace GenerateAst.Templates
             
             #line default
             #line hidden
+            this.Write("        R Visit");
+            
+            #line 25 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ruleModel.ClassName));
+            
+            #line default
+            #line hidden
+            
+            #line 25 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContainerClassName));
+            
+            #line default
+            #line hidden
+            this.Write("(");
+            
+            #line 25 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ruleModel.ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(" ");
+            
+            #line 25 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContainerClassName.ToLower()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n");
+            
+            #line 26 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+
+    }
+
+            
+            #line default
+            #line hidden
+            this.Write("    }\r\n\r\n    internal abstract R Accept<R>(Visitor<R> visitor);\r\n\r\n    // The AST classes\r\n");
+            
+            #line 34 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+
+    for (int i = 0; i < RuleModels.Count; i++)
+    {
+        RuleModel ruleModel = RuleModels[i];
+
+            
+            #line default
+            #line hidden
             this.Write("    internal class ");
             
-            #line 23 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 39 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ruleModel.ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(" : ");
+            
+            #line 39 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContainerClassName));
             
             #line default
             #line hidden
             this.Write("\r\n    {\r\n");
             
-            #line 25 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 41 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
 
         foreach ((string memberType, string memberName) in ruleModel.MemberTypeToNames)
         {
@@ -77,21 +131,21 @@ namespace GenerateAst.Templates
             #line hidden
             this.Write("        private readonly ");
             
-            #line 29 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 45 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(memberType));
             
             #line default
             #line hidden
             this.Write(" _");
             
-            #line 29 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 45 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(memberName));
             
             #line default
             #line hidden
             this.Write(";\r\n");
             
-            #line 30 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 46 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
 
         }
 
@@ -100,21 +154,21 @@ namespace GenerateAst.Templates
             #line hidden
             this.Write("\r\n        public ");
             
-            #line 34 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 50 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ruleModel.ClassName));
             
             #line default
             #line hidden
             this.Write("(");
             
-            #line 34 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 50 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ruleModel.ConstructorArguments));
             
             #line default
             #line hidden
             this.Write(")\r\n        {\r\n");
             
-            #line 36 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 52 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
 
         foreach (string memberName in ruleModel.MemberNames)
         {
@@ -124,31 +178,48 @@ namespace GenerateAst.Templates
             #line hidden
             this.Write("            _");
             
-            #line 40 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 56 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(memberName));
             
             #line default
             #line hidden
             this.Write(" = ");
             
-            #line 40 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 56 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(memberName));
             
             #line default
             #line hidden
             this.Write(";\r\n");
             
-            #line 41 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 57 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
 
         }
 
             
             #line default
             #line hidden
-            this.Write("        }\r\n    }\r\n");
+            this.Write("        }\r\n\r\n        internal override R Accept<R>(Visitor<R> visitor)\r\n        {\r\n            return visitor.Visit");
             
-            #line 46 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            #line 64 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ruleModel.ClassName));
+            
+            #line default
+            #line hidden
+            
+            #line 64 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContainerClassName));
+            
+            #line default
+            #line hidden
+            this.Write("(this);\r\n        }\r\n    }\r\n");
+            
+            #line 67 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
 
+        if (i != RuleModels.Count - 1)
+        {
+            Write(Environment.NewLine);
+        }
     }
 
             
@@ -158,7 +229,7 @@ namespace GenerateAst.Templates
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 50 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
+        #line 75 "H:\code\TutorialProjects\crafting-interpreters\Jlox\GenerateAst\Templates\ExprTemplate.tt"
 
 #nullable enable
     public string? ContainerClassName { get; init; }
